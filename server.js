@@ -39,12 +39,31 @@ app.use(flash());
 
 // renderiza a página de login
 app.get('/', function(req, res) {
-    res.render('login');
+    res.render('login', {loginStatus: req.flash('login-fail')});
+});
+
+// processa a requisição de login do usuário
+app.post('/logar', function (req, res) {
+    let usuario = req.body.usuario;
+    let senha = req.body.senha;
+    let usuarios = [["arnaldo", "uma123"], ["quenidi", "uma123"]];
+
+    for (let x=0; x<usuarios.length; x++) {
+        if (usuarios[x][0] == usuario) {
+            if (usuarios[x][1] == senha) {
+                //res.render('alunos', { usuario: usuario });
+                res.redirect('/alunos');
+            } else {
+                req.flash('login-fail', 'Usuário ou senha incorretas!')
+                res.redirect("/");
+            }
+        }
+    }
 });
 
 app.get('/alunos', function(req, res) {
     try {
-        con.query('SELECT * FROM alunos', (err, alunos) => {
+        con.query('SELECT a.nome, a.cpf, a.telefone, a.escolaridade, c.nome AS cidade FROM alunos a INNER JOIN cidades c ON a.cidade_id = c.id', (err, alunos) => {
             if (err) throw err;
             res.render('alunos', {alunos: alunos});
         });
@@ -101,23 +120,6 @@ app.post('/persistir_aluno', function(req, res) {
         res.redirect('/cadastrar_aluno');
     } catch (err) {
         next(err);
-    }
-});
-
-// processa a requisição de login do usuário
-app.post('/logar', function (req, res) {
-    let usuario = req.body.usuario;
-    let senha = req.body.senha;
-    let usuarios = [["arnaldo", "uma123"], ["quenidi", "uma123"]];
-
-    for (let x=0; x<usuarios.length; x++) {
-        if (usuarios[x][0] == usuario) {
-            if (usuarios[x][1] == senha) {
-                res.render('alunos', { usuario: usuario });
-            } else {
-                res.send("Senha incorreta!");
-            }
-        }
     }
 });
 
