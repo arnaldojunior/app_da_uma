@@ -43,50 +43,65 @@ app.get('/', function(req, res) {
 });
 
 app.get('/alunos', function(req, res) {
-    res.render('alunos');
+    try {
+        con.query('SELECT * FROM alunos', (err, alunos) => {
+            if (err) throw err;
+            res.render('alunos', {alunos: alunos});
+        });
+    } catch(err) {
+        next(err);
+    }
 });
 
 // renderiza a página de cadastro de alunos
 app.get('/cadastrar_aluno', function(req, res) {
-    con.query('SELECT * FROM estados', function(err, estados) {
-        if (err) throw err;
-        console.log(estados);
-
-        con.query('SELECT * FROM cidades', (err, cidades) => {
+    try {
+        con.query('SELECT * FROM estados', function(err, estados) {
             if (err) throw err;
-            console.log(cidades);
-            res.render('cadastrar_aluno', { estados: estados, cidades: cidades, mensagem: req.flash('sucesso') });
+            console.log(estados);
+    
+            con.query('SELECT * FROM cidades', (err, cidades) => {
+                if (err) throw err;
+                console.log(cidades);
+                res.render('cadastrar_aluno', { estados: estados, cidades: cidades, mensagem: req.flash('sucesso') });
+            });
         });
-    });
+    } catch (err) {
+        next(err);
+    }
 });
 
 // persiste o aluno no BD
 app.post('/persistir_aluno', function(req, res) {
-    var aluno = {
-        nome: req.body.nome,
-        cpf: req.body.cpf,
-        endereco: req.body.endereco,
-        bairro: req.body.bairro,
-        cidade_id: req.body.cidade,
-        cep: req.body.cep,
-        telefone: req.body.telefone,
-        email: req.body.email,
-        data_nascimento: req.body.data_nascimento,
-        sexo: req.body.sexo,
-        profissao: req.body.profissao,
-        escolaridade: req.body.escolaridade,
-        estado_civil: req.body.estado_civil,
-        mora_sozinho: req.body.mora_sozinho,
-        tem_transporte: req.body.tem_transporte,
-        pessoa_para_contato: req.body.pessoa_para_contato,
-        fone_do_contato: req.body.fone_do_contato
-    };
-    var sql = "INSERT INTO alunos SET ?";
-    con.query(sql, aluno, function(err, result) {
-        if (err) throw err;
-    });
-    req.flash('sucesso', 'Cadastro realizado com sucesso!');
-    res.redirect('/cadastrar_aluno');
+    try {
+        var aluno = {
+            nome: req.body.nome,
+            cpf: req.body.cpf,
+            endereco: req.body.endereco,
+            bairro: req.body.bairro,
+            cidade_id: req.body.cidade,
+            cep: req.body.cep,
+            telefone: req.body.telefone,
+            email: req.body.email,
+            data_nascimento: req.body.data_nascimento,
+            sexo: req.body.sexo,
+            profissao: req.body.profissao,
+            escolaridade: req.body.escolaridade,
+            estado_civil: req.body.estado_civil,
+            mora_sozinho: req.body.mora_sozinho,
+            tem_transporte: req.body.tem_transporte,
+            pessoa_para_contato: req.body.pessoa_para_contato,
+            fone_do_contato: req.body.fone_do_contato
+        };
+        var sql = "INSERT INTO alunos SET ?";
+        con.query(sql, aluno, function(err, result) {
+            if (err) throw err;
+        });
+        req.flash('sucesso', 'Cadastro realizado com sucesso!');
+        res.redirect('/cadastrar_aluno');
+    } catch (err) {
+        next(err);
+    }
 });
 
 // processa a requisição de login do usuário

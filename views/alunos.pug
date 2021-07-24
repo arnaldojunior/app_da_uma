@@ -7,6 +7,22 @@ html
             include includes/menu.pug
 
             section.content
-                h1 Alunos da UMA
+                h1.welcome-message DISCENTES DA UMA
+
+                section.table
+                    section.table__line.table__header
+                        p Nome
+                        p CPF
+                        p Telefone
+                        p Cidade
+                        p Escolaridade
+
+                    each aluno in alunos 
+                        section.table__line
+                            p #{aluno.nome}
+                            p #{aluno.cpf}
+                            p #{aluno.telefone}
+                            p #{aluno.cidade_id}
+                            p #{aluno.escolaridade}
 
             include includes/footer.pug

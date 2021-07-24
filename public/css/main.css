@@ -106,7 +106,7 @@
     color: #babd4d;
     font-weight: 600; 
     padding: 13px 15px;
-    cursor: default;
+    cursor: pointer;
 }
 .menu__header--first { border-bottom: 1px solid #d4e4ef; cursor: pointer; }
 .not-link { text-decoration: none; }
@@ -178,6 +178,25 @@
     align-self: flex-start;
     cursor: pointer;
     color: red;
+}
+
+/* TABLE */
+.table {
+    border: 5px solid #02475a;
+    margin-top: 20px;
+}
+.table__header {
+    background-color: #e77209;
+    text-align: center;
+}
+.table__line {
+    display: grid;
+    grid-template-columns: 30% 15% 15% 15% 25%;
+    border-bottom: 2px solid #049db1;
+}
+.table__line p {
+    border-right: 2px solid #049db1;
+    padding: 5px;
 }
 
 /* FOOTER */
