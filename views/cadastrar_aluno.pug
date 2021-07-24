@@ -1,0 +1,98 @@
+doctype html 
+html
+    include includes/head.pug
+    body 
+        section.container 
+            include includes/header.pug
+            include includes/menu.pug
+
+            section.content
+                section
+                    h1.welcome-message FICHA DE CADASTRO DE DISCENTE
+                    form.login-form(action="http://127.0.0.1:3000/persistir_aluno", method="post")
+                        label(for="nome") Nome: 
+                        input(id="nome" type="text" name="nome" required)
+                        label(for="cpf") CPF: 
+                        input(id="cpf" type="number" name="cpf" placeholder="apenas números" max="99999999999" required)
+                        label(for="endereco") Endereço: 
+                        input(id="endereco" type="text" name="endereco" required)
+                        label(for="bairro") Bairro: 
+                        input(id="bairro" type="text" name="bairro")
+                        
+                        label(for="uf") UF: 
+                        select(id="uf" name="uf" onchange="atualizarCidades()" required)
+                            option(selected disabled) 
+                            each estado in estados
+                                option(value=estado.id) #{estado.uf}
+
+                        label(for="cidade") Cidade:
+                        select(id="cidade" name="cidade" size="1" disabled required)
+                            option(selected disabled)
+                            each cidade in cidades
+                                option(value=cidade.id class=cidade.id_estado) #{cidade.nome}  
+
+                        label(for="cep") CEP: 
+                        input(id="cep" type="text" name="cep")
+                        label(for="telefone") Telefone: 
+                        input(id="telefone" type="number" name="telefone" min="11111111111" max="99999999999" placeholder="apenas números - com DDD" required)
+                        label(for="email") E-mail: 
+                        input(id="email" type="email" name="email")
+                        label(for="data_nascimento") Data de Nascimento: 
+                        input(id="data_nascimento" type="date" name="data_nascimento" required)
+                        label(for="sexo") Sexo: 
+                        select(id="sexo" name="sexo" required)
+                            option(selected disabled)
+                            option(value="M") Masculino 
+                            option(value="F") Feminino
+
+                        label(for="profissao") Profissão: 
+                        input(id="profissao" type="text" name="profissao")
+                        label(for="escolaridade") Escolaridade: 
+                        select(id="escolaridade" name="escolaridade" required)
+                            option(selected disabled)
+                            option(value="Fundamental Incompleto") Fundamental incompleto 
+                            option(value="Fundamental") Fundamental completo
+                            option(value="Médio") Médio completo
+                            option(value="Superior") Superior completo
+                            option(value="Especialização") Especialização
+                            option(value="Mestrado") Mestrado
+                            option(value="Doutorado") Doutorado
+
+                        label(for="estado_civil") Estado Civil: 
+                        select(id="estado_civil" name="estado_civil" required)
+                            option(selected disabled)
+                            option(value="Solteiro") Solteiro(a) 
+                            option(value="Casado") Casado(a)
+                            option(value="Divorciado") Divorciado(a)
+                            option(value="Viúvo") Viúvo(a)
+
+                        label(for="mora_sozinho") Mora Sozinho(a)? 
+                        select(id="mora_sozinho" name="mora_sozinho" required)
+                            option(selected disabled)
+                            option(value=1) Sim 
+                            option(value=0) Não
+
+                        label(for="tem_transporte") Tem transporte para o local? 
+                        select(id="tem_transporte" name="tem_transporte" required)
+                            option(selected disabled)
+                            option(value=1) Sim 
+                            option(value=0) Não
+
+                        label(for="pessoa_para_contato") Pessoa para contato: 
+                        input(id="pessoa_para_contato" type="text" name="pessoa_para_contato")
+                        label(for="fone_do_contato") Telefone do contato: 
+                        input(id="fone_do_contato" type="number" name="fone_do_contato" min="11111111111" max="99999999999" placeholder="apenas números - com DDD")
+
+                        input.button(type="submit" value="Cadastrar")
+
+                        - var msg = mensagem
+                        - console.log(msg)
+                        if msg != ''
+                            div.message-container  
+                                p= msg
+                                p.message__close-icon(onclick="messageOff()") X
+                            script.
+                                // escurece o fundo da página para dar ênfase à mensagem
+                                - document.querySelector(".container").classList.add("message-on");                        
+
+            include includes/footer.pug

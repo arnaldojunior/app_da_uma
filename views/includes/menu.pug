@@ -1,0 +1,19 @@
+div.menu-bar
+    div.menu-icon(onclick="menuOn()")
+        div 
+        div 
+        div 
+
+nav.menu-mobile 
+    section.menu__icons
+        img(src="img/logo200.png", alt="logo")
+        span.menu__icons--close(onclick="menuOff()") X
+    ul
+        ul
+            a.not-link
+                header.menu__header.menu__header--first Principal
+        ul 
+            a.not-link(href="/alunos") 
+                header.menu__header Alunos
+            li 
+                a(href="/cadastrar_aluno") Cadastrar aluno

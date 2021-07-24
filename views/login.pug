@@ -1,0 +1,18 @@
+doctype html
+html
+    include includes/head.pug
+    body 
+        section.container
+            include includes/header.pug
+
+            section.content
+                section.login
+                    h1.welcome-message Fazer login
+                    form.login-form(action="http://127.0.0.1:3000/logar", method="post")
+                        label(for="usuario") Usuário: 
+                        input(id="usuario" type="text" name="usuario")
+                        label(for="senha") Senha: 
+                        input(id="senha" type="text" name="senha")
+                        input.button(type="submit" value="Entrar")  
+
+            include includes/footer.pug
