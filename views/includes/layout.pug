@@ -1,0 +1,15 @@
+//- layout.pug
+doctype html
+html 
+    include head.pug
+    body 
+        section.container 
+            include header.pug
+
+            block menu
+                include menu.pug
+
+            section.content
+                block content 
+
+            include footer.pug        

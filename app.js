@@ -4,7 +4,7 @@ const mysql = require('mysql');
 const session = require('express-session');
 const flash = require('connect-flash');
 const app = express();
-const porta = 21112;
+const porta = 3000;
 //const alunoDao = require('./aluno-dao');
 
 var con = mysql.createConnection({

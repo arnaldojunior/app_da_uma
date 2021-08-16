@@ -1,28 +1,21 @@
-doctype html 
-html
-    include includes/head.pug
-    body 
-        section.container 
-            include includes/header.pug
-            include includes/menu.pug
+//- alunos.pug
+extends includes/layout.pug
 
-            section.content
-                h1.welcome-message DISCENTES DA UMA
+block content
+    h1.welcome-message DISCENTES DA UMA
 
-                section.table
-                    section.table__line.table__header
-                        p Nome
-                        p CPF
-                        p Telefone
-                        p Cidade
-                        p Escolaridade
+    section.table
+        section.table__line.table__header
+            p Nome
+            p CPF
+            p Telefone
+            p Cidade
+            p Escolaridade
 
-                    each aluno in alunos 
-                        section.table__line
-                            p #{aluno.nome}
-                            p #{aluno.cpf}
-                            p #{aluno.telefone}
-                            p #{aluno.cidade}
-                            p #{aluno.escolaridade}
-
-            include includes/footer.pug
+        each aluno in alunos 
+            section.table__line
+                p #{aluno.nome}
+                p #{aluno.cpf}
+                p #{aluno.telefone}
+                p #{aluno.cidade}
+                p #{aluno.escolaridade}
