@@ -91,6 +91,19 @@ app.get('/cadastrar_aluno', function(req, res) {
     }
 });
 
+// busca o aluno e chama a página para atulizar seus dados
+app.get('/atualizar_aluno/:cpf', function(req, res) {
+    try {
+        var sql = 'SELECT * FROM alunos WHERE cpf = ?';
+        var alunoId = req.params.cpf;
+        con.query(sql, alunoId, (err, aluno) => {
+            res.render('atualizar_aluno', { aluno: aluno });
+        });
+    } catch (err) {
+        next(err);
+    }
+});
+
 // persiste o aluno no BD
 app.post('/persistir_aluno', function(req, res) {
     try {

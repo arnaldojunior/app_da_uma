@@ -191,12 +191,17 @@
 }
 .table__line {
     display: grid;
-    grid-template-columns: 30% 14% 14% 20% 22%;
+    grid-template-columns: 30% 12% 14% 18% 22% 50px;
     border-bottom: 2px solid #049db1;
 }
 .table__line p {
     border-right: 2px solid #049db1;
     padding: 5px;
+}
+.icons-col {
+    align-self: center;
+    justify-self: center;
+    cursor: pointer;
 }
 
 /* FOOTER */
