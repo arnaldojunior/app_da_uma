@@ -10,8 +10,8 @@ const porta = 3000;
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "mysql1991",
-    database: 'uma'
+    password: "mysql123",
+    database: 'appdauma'
 });
 
 // Estabelece conexão com o banco
@@ -91,13 +91,19 @@ app.get('/cadastrar_aluno', function(req, res) {
     }
 });
 
-// busca o aluno e chama a página para atulizar seus dados
+/**
+ * Busca o aluno selecionado, os estados e as cidades e renderiza a página de atualização de aluno
+ */
 app.get('/atualizar_aluno/:cpf', function(req, res) {
     try {
         var sql = 'SELECT * FROM alunos WHERE cpf = ?';
         var alunoId = req.params.cpf;
         con.query(sql, alunoId, (err, aluno) => {
-            res.render('atualizar_aluno', { aluno: aluno });
+            con.query('SELECT * FROM estados', (err, estados) => {
+                con.query('SELECT * FROM cidades', (err, cidades) => {
+                    res.render('atualizar_aluno', { aluno: aluno, estados: estados, cidades: cidades });
+                })
+            });
         });
     } catch (err) {
         next(err);
@@ -105,8 +111,9 @@ app.get('/atualizar_aluno/:cpf', function(req, res) {
 });
 
 // persiste o aluno no BD
-app.post('/persistir_aluno', function(req, res) {
+app.post('/persistir_aluno/:caller', function(req, res) {
     try {
+        var caller = req.params.caller;
         var aluno = {
             nome: req.body.nome,
             cpf: req.body.cpf,
@@ -126,7 +133,8 @@ app.post('/persistir_aluno', function(req, res) {
             pessoa_para_contato: req.body.pessoa_para_contato,
             fone_do_contato: req.body.fone_do_contato
         };
-        var sql = "INSERT INTO alunos SET ?";
+        var sql = caller == "cadastrar" ? "INSERT INTO alunos SET ?" : "UPDATE alunos SET ?";
+        console.log("SQL: "+ sql);
         con.query(sql, aluno, function(err, result) {
             if (err) throw err;
         });

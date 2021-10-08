@@ -3,11 +3,16 @@ extends includes/layout.pug
 
 block content
     section
-        h1.welcome-message ATUALIZAR DADOS DO DISCENTE
-        form.login-form(action="http://127.0.0.1:3000/persistir_aluno" method="post")
+        h1.welcome-message ATUALIZAR DADOS DO ALUNO
+        form.login-form(action="http://127.0.0.1:3000/persistir_aluno/atualizar" method="post")
 
             - var aluno = aluno[0] // pega o primeiro rowDataPacket
+            - var c
             - console.log(aluno);
+
+            each cidade in cidades
+                if aluno.cidade_id == cidade.id
+                    - c = cidade // armazena a cidade do aluno
 
             label(for="nome") Nome: 
             input(id="nome" type="text" name="nome" value=aluno.nome required)
@@ -18,7 +23,21 @@ block content
             label(for="bairro") Bairro: 
             input(id="bairro" type="text" name="bairro" value=aluno.bairro)
 
+            label(for="uf") UF: 
+            select(id="uf" name="uf" onchange="atualizarCidades()" required)
+                each estado in estados
+                    if estado.id == c.id_estado
+                        option(value=estado.id selected) #{estado.uf}
+                    else
+                        option(value=estado.id) #{estado.uf}
 
+            label(for="cidade") Cidade:
+            select(id="cidade" name="cidade" size="1" required)
+                each cidade in cidades
+                    if aluno.cidade_id == cidade.id
+                        option(value=cidade.id class=cidade.id_estado selected) #{cidade.nome}  
+                    else
+                        option(value=cidade.id class=cidade.id_estado) #{cidade.nome}  
 
             label(for="cep") CEP: 
             input(id="cep" type="text" name="cep" value=aluno.cep)
@@ -26,11 +45,14 @@ block content
             input(id="telefone" type="number" name="telefone" value=aluno.telefone min="11111111111" max="99999999999" placeholder="apenas números - com DDD" required)
             label(for="email") E-mail: 
             input(id="email" type="email" name="email" value=aluno.email)
+            
             label(for="data_nascimento") Data de Nascimento: 
-            input(id="data_nascimento" type="date" name="data_nascimento" value=aluno.data_nascimento required)
+            - data = aluno.data_nascimento
+            - data = data.getFullYear()+'-' + (data.getMonth()+1) + '-'+data.getDate()
+            input(id="data_nascimento" type="date" name="data_nascimento" value=data required)
+            
             label(for="sexo") Sexo: 
             select(id="sexo" name="sexo" required)
-                option(selected disabled)
                 option(value="M") Masculino 
                 option(value="F") Feminino
 
@@ -38,7 +60,6 @@ block content
             input(id="profissao" type="text" name="profissao" value=aluno.profissao)
             label(for="escolaridade") Escolaridade: 
             select(id="escolaridade" name="escolaridade" value=aluno.escolaridade required)
-                option(selected disabled)
                 option(value="Fundamental Incompleto") Fundamental incompleto 
                 option(value="Fundamental") Fundamental completo
                 option(value="Médio") Médio completo
@@ -49,7 +70,6 @@ block content
 
             label(for="estado_civil") Estado Civil: 
             select(id="estado_civil" name="estado_civil" value=aluno.estado_civil required)
-                option(selected disabled)
                 option(value="Solteiro") Solteiro(a) 
                 option(value="Casado") Casado(a)
                 option(value="Divorciado") Divorciado(a)
@@ -62,7 +82,6 @@ block content
 
             label(for="tem_transporte") Tem transporte para o local? 
             select(id="tem_transporte" name="tem_transporte" value=aluno.tem_transporte required)
-                option(selected disabled)
                 option(value=1) Sim 
                 option(value=0) Não
 
@@ -71,13 +90,60 @@ block content
             label(for="fone_do_contato") Telefone do contato: 
             input(id="fone_do_contato" type="number" name="fone_do_contato" value=aluno.fone_do_contato min="11111111111" max="99999999999" placeholder="apenas números - com DDD")
 
-            input.button(type="submit" value="Cadastrar")        
-    
+            input.button(type="submit" value="Atualizar")        
+
     script. 
         console.log("olá");
+        var sexo = document.getElementById("sexo");
+        var escolaridade = document.getElementById("escolaridade");
+        var estado_civil = document.getElementById("estado_civil");
         var mora_sozinho = document.getElementById("mora_sozinho");
+        var tem_transporte = document.getElementById("tem_transporte");
+        
+        console.log("#{aluno.escolaridade}");
+
+        //- pré-seleciona a opção do select com base no objeto aluno
+        if ("#{aluno.sexo}" == "M") {
+            sexo.selectedIndex = "0";
+        } else if ("#{aluno.sexo}" == "F") {
+            sexo.selectedIndex = "1";
+        }
+
+        if ("#{aluno.escolaridade}" == "Fundamental Incompleto") {
+            escolaridade.selectedIndex = "0";
+        } else if ("#{aluno.escolaridade}" == "Fundamental") {
+            escolaridade.selectedIndex = "1";
+        } else if ("#{aluno.escolaridade}" == "Médio") {
+            escolaridade.selectedIndex = "2";
+        } else if ("#{aluno.escolaridade}" == "Superior") {
+            escolaridade.selectedIndex = "3";
+        } else if ("#{aluno.escolaridade}" == "Especialização") {
+            escolaridade.selectedIndex = "4";
+        } else if ("#{aluno.escolaridade}" == "Mestrado") {
+            escolaridade.selectedIndex = "5";
+        } else if ("#{aluno.escolaridade}" == "Doutorado") {
+            escolaridade.selectedIndex = "6";
+        }
+
+        if ("#{aluno.estado_civil}" == "Solteiro") {
+            estado_civil.selectedIndex = "0";
+        } else if ("#{aluno.estado_civil}" == "Casado") {
+            estado_civil.selectedIndex = "1";
+        } else if ("#{aluno.estado_civil}" == "Divorciado") {
+            estado_civil.selectedIndex = "2";
+        } else if ("#{aluno.estado_civil}" == "Viúvo") {
+            estado_civil.selectedIndex = "3";
+        }
+
         if (#{aluno.mora_sozinho} == 1) {
             mora_sozinho.selectedIndex = "0";
         } else {
             mora_sozinho.selectedIndex = "1";
         }
+
+        if (#{aluno.tem_transporte} == 1) {
+            tem_transporte.selectedIndex = "0";
+        } else {
+            tem_transporte.selectedIndex = "1";
+        }
+

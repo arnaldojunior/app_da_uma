@@ -3,8 +3,8 @@ extends includes/layout.pug
 
 block content
     section
-        h1.welcome-message FICHA DE CADASTRO DE DISCENTE
-        form.login-form(action="http://127.0.0.1:3000/persistir_aluno" method="post")
+        h1.welcome-message FICHA DE CADASTRO DE ALUNO
+        form.login-form(action="http://127.0.0.1:3000/persistir_aluno/cadastrar" method="post")
             label(for="nome") Nome: 
             input(id="nome" type="text" name="nome" required)
             label(for="cpf") CPF: 
