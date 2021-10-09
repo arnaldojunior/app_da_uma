@@ -101,7 +101,7 @@ app.get('/atualizar_aluno/:cpf', function(req, res) {
         con.query(sql, alunoId, (err, aluno) => {
             con.query('SELECT * FROM estados', (err, estados) => {
                 con.query('SELECT * FROM cidades', (err, cidades) => {
-                    res.render('atualizar_aluno', { aluno: aluno, estados: estados, cidades: cidades });
+                    res.render('atualizar_aluno', { aluno: aluno, estados: estados, cidades: cidades, mensagem: req.flash('sucesso') });
                 })
             });
         });
@@ -113,6 +113,7 @@ app.get('/atualizar_aluno/:cpf', function(req, res) {
 // persiste o aluno no BD
 app.post('/persistir_aluno/:caller', function(req, res) {
     try {
+        var sql;
         var caller = req.params.caller;
         var aluno = {
             nome: req.body.nome,
@@ -133,13 +134,30 @@ app.post('/persistir_aluno/:caller', function(req, res) {
             pessoa_para_contato: req.body.pessoa_para_contato,
             fone_do_contato: req.body.fone_do_contato
         };
-        var sql = caller == "cadastrar" ? "INSERT INTO alunos SET ?" : "UPDATE alunos SET ?";
-        console.log("SQL: "+ sql);
-        con.query(sql, aluno, function(err, result) {
-            if (err) throw err;
-        });
-        req.flash('sucesso', 'Cadastro realizado com sucesso!');
-        res.redirect('/cadastrar_aluno');
+
+        if (caller == "cadastrar") {
+            sql = "INSERT INTO alunos SET ?";
+
+            con.query(sql, aluno, function(err, result) {
+                if (err) {
+                    throw err;
+                } else {
+                    req.flash('sucesso', 'Cadastro realizado com sucesso!');
+                    res.redirect('/cadastrar_aluno'); 
+                }
+            });
+        } else {
+            sql = "UPDATE alunos SET ? WHERE id = ?";
+
+            con.query(sql, [aluno, req.body.id], function(err, result) {
+                if (err) {
+                    throw err;
+                } else {
+                    req.flash('sucesso', 'Atualização realizada com sucesso!');
+                    res.redirect(`/atualizar_aluno/${aluno.cpf}`);
+                }
+            });            
+        }
     } catch (err) {
         next(err);
     }
