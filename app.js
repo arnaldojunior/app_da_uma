@@ -3,8 +3,10 @@ const path = require('path');
 const mysql = require('mysql');
 const session = require('express-session');
 const flash = require('connect-flash');
+const bcrypt = require('bcrypt');
 const app = express();
 const porta = 3000;
+const saltRounds = 10;
 //const alunoDao = require('./aluno-dao');
 
 var con = mysql.createConnection({
@@ -55,7 +57,7 @@ app.post('/logar', function (req, res) {
                 //res.render('alunos', { usuario: usuario });
                 res.redirect('/alunos');
             } else {
-                req.flash('login-fail', 'Usuário ou senha incorretas!')
+                req.flash('login-fail', 'Usuário ou senha incorretos!')
                 res.redirect("/");
             }
         }
@@ -161,6 +163,43 @@ app.post('/persistir_aluno/:caller', function(req, res) {
         }
     } catch (erro) {
         next(erro);
+    }
+});
+
+// renderiza a página de cadastro de usuários
+app.get('/cadastrar_usuario', function(req, res) {
+    try {
+        res.render('cadastrar_usuario', { mensagem: req.flash('sucesso') });
+    } catch (err) {
+        next(err);
+    }
+});
+
+app.post('/persistir_usuario', (req, res) => {
+    try {
+        var usuario = {
+            nome: req.body.nome,
+            email: req.body.email,
+            usuario: req.body.usuario,
+            senha: req.body.senha
+        };
+        // cria uma senha hash
+        usuario.senha = bcrypt.hash(usuario.senha, saltRounds);
+
+        var sql = "INSERT INTO usuarios SET ?";
+
+        con.query(sql, usuario, (erro, result) => {
+            if (erro) {
+                req.flash('sucesso', 'Erro ao cadastrar usuário!');
+                res.redirect('/cadastrar_usuario');
+            } else {
+                req.flash('sucesso', 'Cadastro realizado com sucesso!');
+                res.redirect('/cadastrar_usuario'); 
+            }
+        });
+
+    } catch (err) {
+        next(err);
     }
 });
 

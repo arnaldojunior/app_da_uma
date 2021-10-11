@@ -1,0 +1,47 @@
+//- cadastrar_aluno.pug
+extends includes/layout.pug
+
+block content
+    section
+        h1.welcome-message FICHA DE CADASTRO DE USUÁRIO
+        form.login-form(action="http://127.0.0.1:3000/persistir_usuario" method="post" onsubmit="return validarForm();")
+            label(for="nome") Nome: 
+            input(id="nome" type="text" name="nome" required)
+            label(for="email") E-mail: 
+            input(id="email" type="email" name="email" required)
+            label(for="usuario") Usuário: 
+            input(id="usuario" type="text" name="usuario" required)
+            label(for="senha") Senha: 
+            input(id="senha" type="password" name="senha" required)
+            label(for="senha2") Repita a Senha: 
+            input(id="senha2" type="password" name="senha2" required)
+
+            input.button(type="submit" value="Cadastrar")
+
+    - var msg = mensagem
+    - console.log(msg)
+
+    div.message-container(id="message-container")
+        if msg == ''
+            p
+            script.
+                document.getElementById("message-container").style.display = "none";
+        else
+            p= msg
+        p.message__close-icon(onclick="messageOff()") X
+
+    script. 
+        var msgContainer = document.getElementById("message-container");
+
+        function validarForm() {
+            var senha = document.getElementById('senha').value;
+            var senha2 = document.getElementById('senha2').value;
+
+            if (senha != senha2) {
+                console.log(senha +" - "+ senha2);
+                msgContainer.firstElementChild.innerHTML = "Senhas diferentes!";
+                msgContainer.style.display = "inline";
+                return false;
+            }
+            return true;
+        }
