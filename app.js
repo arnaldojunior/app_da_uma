@@ -140,7 +140,8 @@ app.post('/persistir_aluno/:caller', function(req, res) {
 
             con.query(sql, aluno, function(err, result) {
                 if (err) {
-                    throw err;
+                    req.flash('sucesso', 'Erro ao cadastrar aluno!');
+                    res.redirect('/cadastrar_aluno');
                 } else {
                     req.flash('sucesso', 'Cadastro realizado com sucesso!');
                     res.redirect('/cadastrar_aluno'); 
@@ -158,8 +159,8 @@ app.post('/persistir_aluno/:caller', function(req, res) {
                 }
             });            
         }
-    } catch (err) {
-        next(err);
+    } catch (erro) {
+        next(erro);
     }
 });
 

@@ -4,6 +4,10 @@ extends includes/layout.pug
 block content
     h1.welcome-message ALUNOS DA UMA
 
+    div.action__bar
+        a(href="/cadastrar_aluno")
+            button.action__button Cadastrar aluno
+
     section.table
         section.table__line.table__header
             p Nome

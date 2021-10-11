@@ -180,6 +180,20 @@
     color: red;
 }
 
+/* ACTION BAR */
+.action__button {
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: none;
+    background-color: #049db1;
+    font: 18px Arial;
+    color: whitesmoke;
+    cursor: pointer;
+}
+.action__button:hover {
+    box-shadow: 1px 1px 5px rgb(0,0,0,0.4);
+}
+
 /* TABLE */
 .table {
     border: 5px solid #02475a;
