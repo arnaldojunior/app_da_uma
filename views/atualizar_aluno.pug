@@ -4,6 +4,10 @@ extends includes/layout.pug
 block content
     section
         h1.welcome-message ATUALIZAR DADOS DO ALUNO
+
+        div.action__bar
+            button.action__button(onclick="window.print()") Imprimir
+
         form.login-form(action="http://127.0.0.1:3000/persistir_aluno/atualizar" method="post")
 
             - var aluno = aluno[0] // pega o primeiro rowDataPacket
