@@ -47,21 +47,32 @@ app.get('/', function(req, res) {
 
 // processa a requisição de login do usuário
 app.post('/logar', function (req, res) {
-    let usuario = req.body.usuario;
+    let username = req.body.usuario;
     let senha = req.body.senha;
-    let usuarios = [["arnaldo", "uma123"], ["quenidi", "uma123"]];
+    var sql = "SELECT * FROM usuarios WHERE usuario = ?";
 
-    for (let x=0; x<usuarios.length; x++) {
-        if (usuarios[x][0] == usuario) {
-            if (usuarios[x][1] == senha) {
-                //res.render('alunos', { usuario: usuario });
-                res.redirect('/alunos');
-            } else {
-                req.flash('login-fail', 'Usuário ou senha incorretos!')
-                res.redirect("/");
-            }
+    con.query(sql, username, (err, result) => {
+        if (err) throw err;
+
+        // usuário não encontrado
+        if (result.length == 0) {
+            req.flash('login-fail', 'Usuário não cadastrado!')
+            res.redirect('/');
+        } else {
+            var usuario = result[0];
+            // verifica a senha
+            bcrypt.compare(senha, usuario.senha, function (err, result) {
+                if (err) throw err;
+
+                if (result == true) {
+                    res.redirect('/alunos');
+                } else {
+                    req.flash('login-fail', 'Usuário ou senha incorretos!')
+                    res.redirect("/");
+                }
+            });
         }
-    }
+    });
 });
 
 app.get('/alunos', function(req, res) {
@@ -184,20 +195,20 @@ app.post('/persistir_usuario', (req, res) => {
             senha: req.body.senha
         };
         // cria uma senha hash
-        usuario.senha = bcrypt.hash(usuario.senha, saltRounds);
+        bcrypt.hash(usuario.senha, saltRounds, function(err, hash) {
+            usuario.senha = hash;
+            var sql = "INSERT INTO usuarios SET ?";
 
-        var sql = "INSERT INTO usuarios SET ?";
-
-        con.query(sql, usuario, (erro, result) => {
-            if (erro) {
-                req.flash('sucesso', 'Erro ao cadastrar usuário!');
-                res.redirect('/cadastrar_usuario');
-            } else {
-                req.flash('sucesso', 'Cadastro realizado com sucesso!');
-                res.redirect('/cadastrar_usuario'); 
-            }
+            con.query(sql, usuario, (erro, result) => {
+                if (erro) {
+                    req.flash('sucesso', 'Erro ao cadastrar usuário!');
+                    res.redirect('/cadastrar_usuario');
+                } else {
+                    req.flash('sucesso', 'Cadastro realizado com sucesso!');
+                    res.redirect('/cadastrar_usuario'); 
+                }
+            });
         });
-
     } catch (err) {
         next(err);
     }
