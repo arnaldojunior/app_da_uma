@@ -7,6 +7,8 @@ block content
         form.login-form(action="http://127.0.0.1:3000/persistir_aluno/cadastrar" method="post")
             label(for="nome") Nome: 
             input(id="nome" type="text" name="nome" required)
+            label(for="rg") RG: 
+            input(id="rg" type="number" name="rg" placeholder="apenas números" max="99999999999")
             label(for="cpf") CPF: 
             input(id="cpf" type="number" name="cpf" placeholder="apenas números" max="99999999999" required)
             label(for="endereco") Endereço: 
@@ -15,7 +17,7 @@ block content
             input(id="bairro" type="text" name="bairro")
 
             label(for="uf") UF: 
-            select(id="uf" name="uf" onchange="atualizarCidades()" required)
+            select(id="uf" name="uf" onchange="atualizarCidades('cadastrar')" required)
                 option(selected disabled) 
                 each estado in estados
                     option(value=estado.id) #{estado.uf}

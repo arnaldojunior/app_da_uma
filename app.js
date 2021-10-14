@@ -130,6 +130,7 @@ app.post('/persistir_aluno/:caller', function(req, res) {
         var caller = req.params.caller;
         var aluno = {
             nome: req.body.nome,
+            rg: req.body.rg,
             cpf: req.body.cpf,
             endereco: req.body.endereco,
             bairro: req.body.bairro,

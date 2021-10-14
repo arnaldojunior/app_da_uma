@@ -22,6 +22,8 @@ block content
             
             label(for="nome") Nome: 
             input(id="nome" type="text" name="nome" value=aluno.nome required)
+            label(for="rg") RG: 
+            input(id="rg" type="number" name="rg" value=aluno.rg placeholder="apenas números" max="99999999999")
             label(for="cpf") CPF: 
             input(id="cpf" type="number" name="cpf" value=aluno.cpf placeholder="apenas números" max="99999999999" required)
             label(for="endereco") Endereço: 
@@ -30,7 +32,7 @@ block content
             input(id="bairro" type="text" name="bairro" value=aluno.bairro)
 
             label(for="uf") UF: 
-            select(id="uf" name="uf" onchange="atualizarCidades()" required)
+            select(id="uf" name="uf" onchange="atualizarCidades('atualizar')" required)
                 each estado in estados
                     if estado.id == c.id_estado
                         option(value=estado.id selected) #{estado.uf}
@@ -39,6 +41,7 @@ block content
 
             label(for="cidade") Cidade:
             select(id="cidade" name="cidade" size="1" required)
+                option(disabled)
                 each cidade in cidades
                     if aluno.cidade_id == cidade.id
                         option(value=cidade.id class=cidade.id_estado selected) #{cidade.nome}  
@@ -107,6 +110,7 @@ block content
                     - document.querySelector(".container").classList.add("message-on");
 
     script. 
+        atualizarCidades();
         console.log("olá");
         var sexo = document.getElementById("sexo");
         var escolaridade = document.getElementById("escolaridade");
